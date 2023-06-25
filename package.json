@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "axios": "^1.4.0",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.3.1",
+    "env": "^0.0.2",
+    "node.js": "^0.0.1-security",
+    "nodemon": "^2.0.22",
+    "openai": "^3.3.0"
+  },
+  "name": "article-bias-checker-application",
+  "version": "1.0.0",
+  "description": "Checks the level of bias in an article",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ."
+  },
+  "author": "",
+  "license": "ISC"
+}
