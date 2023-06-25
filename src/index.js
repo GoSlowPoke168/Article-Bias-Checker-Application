@@ -2,26 +2,41 @@ require("dotenv/config");
 const { Configuration, OpenAIApi } = require("openai");
 const cheerio = require("cheerio");
 const axios = require("axios");
+const express = require("express");
+
+console.log("Server-side code running");
+
+const app = express();
+app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/public/index.html");
+});
+
+app.post("/clicked", async (req, res) => {
+    const url = req.body.url;
+    console.log("Click logged on server-side.");
+    try {
+        const result = await webScraper(url);
+        // res.json(result);
+        res.status(200).json(result);
+        // console.log(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("An error occurred.");
+    }
+});
+
+app.listen(8080, () => {
+    console.log("Listening on port 8080");
+});
 
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
-
-const getDataFromOpenAI = async (prompt) => {
-    const response = await openai.createCompletion({
-        prompt: prompt,
-        model: "text-davinci-003",
-        temperature: 0,
-        max_tokens: 200,
-        top_p: 1.0,
-        frequency_penalty: 0.0,
-        presence_penalty: 0.0,
-    });
-    console.log(`Number of tokens used: ${response.data.usage.total_tokens}`);
-    // console.log(response.data.choices[0].text);
-    extractInformation(response.data.choices[0].text);
-};
 
 async function webScraper(url) {
     try {
@@ -41,23 +56,54 @@ async function webScraper(url) {
         // console.log("Page Title:", pageTitle);
         // console.log("Paragraph Text:", paragraphText);
 
-        getDataFromOpenAI(
+        const answerObj = await getDataFromOpenAI(
             `Please read the article thoroughly and consider various aspects to determine its potential bias. Assess the language used, the tone, the selection of facts and sources, and any potential framing or manipulation techniques employed. Rate the article on a scale from 0 to 100, where 0 represents complete neutrality and 100 represents the highest level of bias. Explain your rating by highlighting specific examples of biased language, skewed representation of facts, or any other indicators of potential bias that you come across. Additionally, mention any counterarguments or alternative perspectives that might help provide a more balanced assessment. Please take your time to carefully analyze the article and provide a comprehensive evaluation. Make your response in a JSON format structured like this: {"rating": "your_rating", "explanation": "your_explanation"}.\nArticle:${paragraphText}`
         );
+        return answerObj;
     } catch (error) {
         console.log(error);
+        throw error;
     }
     // const htmlClass = $(".elementClass")
     // const htmlId = $("#elementId")
 }
 
-function extractInformation(responseObj) {
-    const result = JSON.parse(responseObj);
-    // console.log(responseObj);
-    const rating = result.rating;
-    const explanation = result.explanation;
-    console.log(`Rating: ${rating}`);
-    console.log(`Explanation: ${explanation}`);
-}
+const getDataFromOpenAI = async (prompt) => {
+    try {
+        const response = await openai.createCompletion({
+            prompt: prompt,
+            model: "text-davinci-003",
+            temperature: 0,
+            max_tokens: 500,
+            top_p: 1.0,
+            frequency_penalty: 0.0,
+            presence_penalty: 0.0,
+        });
+        console.log(`Number of tokens used: ${response.data.usage.total_tokens}`);
+        const extractedData = extractInformation(response.data.choices[0].text);
+        return extractedData;
+    } catch {
+        console.log(error);
+        throw error;
+    }
 
-// webScraper("https://www.cnn.com/2023/06/23/politics/obama-amanpour-what-matters/index.html");
+    // console.log(response.data.choices[0].text);
+};
+
+function extractInformation(responseObj) {
+    try {
+        const result = JSON.parse(responseObj);
+        // console.log(responseObj);
+        const rating = result.rating;
+        const explanation = result.explanation;
+        // console.log(`Rating: ${rating}`);
+        // console.log(`Explanation: ${explanation}`);
+        return {
+            rating,
+            explanation,
+        };
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>News Bias Checker</title>
+        <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+        <!-- <link rel="stylesheet" type="text/css" href="style.css" /> -->
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            input {
+                font-size: 3em;
+                font-size: 40px;
+                line-height: 1.5em;
+                border: 1px solid black;
+                background: #fff;
+                background: rgba(255, 255, 255, 0.6);
+                box-sizing: border-box;
+                display: block;
+                height: 1.5em;
+                margin-top: 1em;
+                padding: 0;
+                text-align: center;
+                text-transform: none;
+                max-width: 700px;
+                margin-right: auto;
+                margin-left: auto;
+                width: 100%;
+            }
+            .button {
+                padding: 15px 25px;
+                font-size: 24px;
+                text-align: center;
+                cursor: pointer;
+                outline: none;
+                color: #fff;
+                background-color: #e97770;
+                border: none;
+                border-radius: 15px;
+                box-shadow: 0 9px #999;
+                width: 40%;
+            }
+            .button:hover {
+                background-color: #b04742;
+            }
+            .button:active {
+                background-color: #b04742;
+                box-shadow: 0 5px #666;
+                transform: translateY(4px);
+            }
+            .button-container {
+                text-align: center;
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <form>
+            <input type="url" placeholder="Paste article link here..." id="inputUrl" />
+            <div class="button-container">
+                <button class="button" id="myButton">Click me!</button>
+            </div>
+        </form>
+        <h1 id="rating"></h1>
+        <p id="explanation"></p>
+
+        <script>
+            console.log("Client-side code running");
+
+            const button = document.getElementById("myButton");
+
+            document.getElementById("myButton").addEventListener("click", function (event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                var articleLink = document.getElementById("inputUrl").value;
+
+                fetch("/clicked", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        url: articleLink,
+                    }),
+                })
+                    .then(function (response) {
+                        if (response.ok) {
+                            return response.json(); // Parse the JSON response
+                        }
+                        throw new Error("Request failed.");
+                    })
+                    .then(function (data) {
+                        console.log(data);
+                        console.log(data.rating);
+                        console.log(data.explanation);
+                        document.getElementById("rating").innerHTML = JSON.stringify(data.rating);
+                        document.getElementById("explanation").innerHTML = JSON.stringify(
+                            data.explanation
+                        );
+                        // Access the JSON data
+                        // ... your code to handle the response data
+                    })
+                    .catch(function (error) {
+                        console.log("Error occurred:", error); // Log the error
+                    });
+            });
+        </script>
+    </body>
+</html>
