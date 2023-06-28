@@ -57,7 +57,8 @@ async function webScraper(url) {
         // console.log("Paragraph Text:", paragraphText);
 
         const answerObj = await getDataFromOpenAI(
-            `Please read the article thoroughly and consider various aspects to determine its potential bias. Assess the language used, the tone, the selection of facts and sources, and any potential framing or manipulation techniques employed. Rate the article on a scale from 0 to 100, where 0 represents complete neutrality and 100 represents the highest level of bias. Explain your rating by highlighting specific examples of biased language, skewed representation of facts, or any other indicators of potential bias that you come across. Additionally, mention any counterarguments or alternative perspectives that might help provide a more balanced assessment. Please take your time to carefully analyze the article and provide a comprehensive evaluation. Make your response in a JSON format structured like this: {"rating": "your_rating", "explanation": "your_explanation"}.\nArticle:${paragraphText}`
+            // `Please read the article thoroughly and consider various aspects to determine its potential bias. Assess the language used, the tone, the selection of facts and sources, and any potential framing or manipulation techniques employed. Rate the article on a scale from 0 to 100, where 0 represents complete neutrality and 100 represents the highest level of bias. Explain your rating by highlighting specific examples of biased language, skewed representation of facts, or any other indicators of potential bias that you come across. Additionally, mention any counterarguments or alternative perspectives that might help provide a more balanced assessment. Please take your time to carefully analyze the article and provide a comprehensive evaluation. Make your response in a JSON format structured like this: {"rating": "your_rating", "explanation": "your_explanation"}.\nArticle:${paragraphText}`
+            `Please read the article thoroughly and consider various aspects to determine its potential bias. Assess the language used, the tone, the selection of facts and sources, and any potential framing or manipulation techniques employed. Rate the article on a scale from 0 to 100, where 0 represents complete neutrality and 100 represents the highest level of bias. Explain your rating by highlighting specific examples of biased language, skewed representation of facts, or any other indicators of potential bias that you come across. Additionally, mention any counterarguments or alternative perspectives that might help provide a more balanced assessment. Please take your time to carefully analyze the article and provide a comprehensive evaluation. You must make your response in a single lined JSON format structured like this: {"rating": "your_rating", "explanation": "your_explanation"}. Double check to make sure it is in the correct format and your_rating is set as a string.\nArticle:${paragraphText}`
         );
         return answerObj;
     } catch (error) {
@@ -92,6 +93,7 @@ const getDataFromOpenAI = async (prompt) => {
 
 function extractInformation(responseObj) {
     try {
+        responseObj;
         const result = JSON.parse(responseObj);
         // console.log(responseObj);
         const rating = result.rating;
