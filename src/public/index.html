@@ -584,7 +584,7 @@
 			background: #282b34 url("images/overlay.png");
 			color: #eee;
 			color: rgba(255, 255, 255, 0.5);
-			padding-bottom: 6em;
+			/* padding-bottom: 6em; */
 		}
 
 		#footer h2 {
@@ -714,9 +714,9 @@
 
 			/* Nav */
 
-			#nav {
+			/* #nav {
 				display: none;
-			}
+			} */
 
 			/* Logo */
 
@@ -880,10 +880,11 @@
 			padding: 0;
 			text-align: center;
 			text-transform: none;
-			max-width: 900px;
+			min-width: 300px;
 			margin-right: auto;
 			margin-left: auto;
 			width: 100%;
+			outline: 5px ridge white;
 		}
 		.myButton {
 			all: unset;
@@ -911,16 +912,40 @@
 			text-align: center;
 			margin-top: 20px;
 		}
-
-		.circular-chart {
+		.outputContainer {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			align-content: center;
+		}
+		.rating:nth-child(1){
 			display: block;
-			margin: auto;
-			margin-top: 30px;
-			margin-bottom: 50px;
-			max-width: 80%;
-			max-height: 250px;
+			flex-grow: 0;
+			flex-shrink: 1;
+			flex-basis: auto;
+			align-self: auto;
+			order: 0;
+		}
+		.rating {
+			margin: 50px;
+			min-width: 250px;
+			min-height: 250px;
+			height: 100%;
+			width: 20%;
 			outline: 5px ridge white;
 		}
+		/* .circular-chart { */
+			/* display: inline-block; */
+			/* margin-top: 30px; */
+			/* margin-bottom: 50px; */
+			/* min-width: 250px;
+			min-height: 250px;
+			height: 100%;
+			width: 20%;
+			outline: 5px ridge white; */
+		/* } */
 
 		.circle {
 			stroke: #4cc790;
@@ -945,12 +970,22 @@
 			background-color: #dedede;
 			border: 5px ridge white;
 			text-align: center;
-			display: flex;
 			justify-content: center;
 			align-items: center;
-			min-height: 5em;
+			min-height: 268px;
+			width: 70%;
+			height: 100%;
 			height: fit-content;
 			color: black;
+			margin: 10px;
+		}
+		.explanation:nth-child(2) {
+			display: block;
+			flex-grow: 0;
+			flex-shrink: 1;
+			flex-basis: auto;
+			align-self: auto;
+			order: 0;
 		}
 		#loading {
 			width: 3rem;
@@ -959,7 +994,7 @@
 			border-top: 6px solid #e97770;
 			border-radius: 100%;
 			margin: auto;
-			margin-top: 20px;
+			margin-top: 50px;
 			visibility: hidden;
 			animation: spin 1s infinite linear;
 		}
@@ -973,6 +1008,13 @@
 			to {
 				transform: rotate(360deg);
 			}
+		}
+		.footerFoot {
+			background-image: url("https://wallpaperaccess.com/full/5368513.jpg");
+			height: 100px;
+			margin: 0;
+			padding: 0;
+			background-color: #282b34
 		}
 	</style>
 	</head>
@@ -1061,25 +1103,30 @@
 						<input type="url" placeholder="Paste article link here..." id="inputUrl" />
 						<div class="button-container">
 							<button class="myButton" id="myButton">Click me!</button>
-							<div id="loading"></div>
 						</div>
+						<div id="loading"></div>
 					</form>
-					<svg viewBox="0 0 36 36" class="circular-chart">
-						<path
-							class="circle"
-							id="circle"
-							stroke-dasharray="0, 100"
-							d="M18 2.0845
-							a 15.9155 15.9155 0 0 1 0 31.831
-							a 15.9155 15.9155 0 0 1 0 -31.831"
-						/>
-						<text x="18" y="20.35" class="percentage" id="percentage">0%</text>
-					</svg>
-					<!-- <h1 id="rating"></h1> -->
-					<div class="explanation">										
-						<p id="explanation" style="padding: 10px;"></p>
+					<div class="outputContainer">
+						<div class="rating">
+							<svg viewBox="0 0 36 36" class="circular-chart">
+								<path
+									class="circle"
+									id="circle"
+									stroke-dasharray="0, 100"
+									d="M18 2.0845
+									a 15.9155 15.9155 0 0 1 0 31.831
+									a 15.9155 15.9155 0 0 1 0 -31.831"
+								/>
+								<text x="18" y="20.35" class="percentage" id="percentage">0%</text>
+							</svg>
+						</div>
+						<!-- <h1 id="rating"></h1> -->
+						<div class="explanation">										
+							<p id="explanation" style="padding: 10px;"></p>
+						</div>
 					</div>
 				</section>
+				<div class="footerFoot"></div>
 
                 <script>
                     console.log("Client-side code running");
